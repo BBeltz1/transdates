@@ -46,8 +46,7 @@ trans_dat = data.frame("ereg" = c(NA), "yy" = c(NA),
                        "sprtrans20" = c(NA), "falltrans20" = c(NA),
                        "sprtrans30" = c(NA), "falltrans30" = c(NA),
                        "maxday" = c(NA), "sumlen"= c(NA),
-                       "sumlen10"= c(NA), "sumlen20"= c(NA), "sumlen30"= c(NA)
-                       )
+                       "sumlen10"= c(NA), "sumlen20"= c(NA), "sumlen30"= c(NA))
 
 for (yy in 1982:lastyear){
   for (ereg in eregs){
@@ -69,55 +68,59 @@ for (yy in 1982:lastyear){
       if (styr[dayc] > ltmean){
         sprtrans=dayc
         break
-      }}
+      }else{sprtrans = NA}}
     for (dayc in 105:195){
       if (styr[dayc] > (ltmean*.9)){
         sprtrans10=dayc
         break
-      }}
+      }else{sprtrans10 = NA}}
     for (dayc in 105:195){
       if (styr[dayc] > (ltmean*.8)){
         sprtrans20=dayc
         break
-      }}
+      }else{sprtrans20 = NA}}
     for (dayc in 105:195){
       if (styr[dayc] > (ltmean*.7)){
         sprtrans30=dayc
         break
-      }}
+      }else{sprtrans30 = NA}}
     #}
 
-    if(length(styr)>364){
+    #if(length(styr)>364){
 
       if(length(styr)>182){
         for (dayc in 275:365){
           if (styr[dayc] < ltmean){
             falltrans=dayc
             break
-          }}
+          }else{falltrans = NA}}
         for (dayc in 275:365){
           if (styr[dayc] < (ltmean*1.1)){
             falltrans10=dayc
             break
-          }}
+          }else{falltrans10 = NA}}
         for (dayc in 275:365){
           if (styr[dayc] < (ltmean*1.2)){
             falltrans20=dayc
             break
-          }}
+          }else{falltrans20 = NA}}
         for (dayc in 275:365){
           if (styr[dayc] < (ltmean*1.3)){
             falltrans30=dayc
             break
-          }}
-        }
+          }else{falltrans30 = NA}}
+      }else{
+        falltrans = NA
+        falltrans10 = NA
+        falltrans20 = NA
+        falltrans30 = NA}
         for (dayc in 1:365){
           if (styr[dayc] == maxsstyr){
             maxday=dayc
             break
           }
         }
-      }
+      #}
 
     #} # loop to guide aginst incomplete last year
 
@@ -143,13 +146,9 @@ for (yy in 1982:lastyear){
   }  # ecoregion
 }#year
 
-write.csv(trans_dat, "EPU_transition_dates.csv",col.names=T)
+write.csv(trans_dates, "EPU_transition_dates.csv",col.names=T)
 
 
-test<-read.csv(here::here("EPU_transition_dates.csv"))
-trans<- test %>% filter(yy %in% 1982:2022)
-
-### Test Plot
 
 
 

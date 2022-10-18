@@ -1,0 +1,56 @@
+# SST Transition Dates
+
+
+```{r, echo = FALSE,message = FALSE,warning = FALSE }
+knitr::opts_chunk$set(echo = FALSE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.align = 'center') #allows for inserting R code into captions
+library(tidyverse)
+dat<- read.csv(here::here("EPU_transition_dates.csv")) %>% 
+  filter(!EPU == "NA")
+
+dat<- dat %>% pivot_longer(cols = sprtrans:sumlen30, names_to = "Var", values_to = "Value")
+```
+
+
+## Spring and Fall transition dates - mean to 30%
+
+```{r}
+dat %>% filter(Var %in% c("sprtrans", "falltrans",
+                          "sprtrans10", "falltrans10",
+                          "sprtrans20", "falltrans20",
+                          "sprtrans30", "falltrans30")) %>% 
+  ggplot2::ggplot()+
+  geom_line(aes(x = Time, y = Value, color = Var))+
+  facet_wrap(~EPU)
+```
+
+## Length of Summer mean to 30%
+
+```{r}
+gls<- dat %>% filter(Var == "sumlen", 
+                     !Value == "NA") %>% 
+  mutate(Time = as.numeric(Time), 
+         Value = as.numeric(Value))
+
+dat %>% filter(Var %in% c("sumlen", "sumlen10", 
+                          "sumlen20", "sumlen30")) %>%
+  mutate(Time = as.numeric(Time), 
+         Value = as.numeric(Value)) %>% 
+  ggplot2::ggplot(aes(x = Time, y = Value, color = Var))+
+  geom_line()+
+  facet_wrap(~EPU)
+
+
+```
+
+## Max day
+
+```{r}
+dat %>% filter(Var == "maxday") %>% 
+  ggplot2::ggplot()+
+  geom_line(aes(x = Time, y = Value, color = Var))+
+  facet_wrap(~EPU)
+
+```
