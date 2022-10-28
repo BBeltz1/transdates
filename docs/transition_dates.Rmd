@@ -15,7 +15,7 @@ dat<- dat %>% pivot_longer(cols = sprtrans:sumlen30, names_to = "Var", values_to
 
 #### ltm compare
 
-```{r}
+```{r, fig.cap="red line = 2021, green line = 2021*0.7, black line = ltm and dashed in mean of ltm, blue mass is all years"}
 regdata<- read.csv(file.path(here::here("data-raw/TS_SHP_adv rep MAB GOM GBK NES SCSPoly.csv"))) %>%
   dplyr::filter(Location %in% c("GBK", "GOM", "MAB"))
 
@@ -26,6 +26,9 @@ ltm <- regdata %>%
   dplyr::ungroup() %>% 
   dplyr::mutate(hline = mean(ltm))
 
+m30 <- regdata %>% 
+  dplyr::filter(Y == 2021) %>% 
+  dplyr::mutate(Mean30 = Mean*0.7)
 y2021<- regdata %>% 
   dplyr::filter(Y == 2021)
 regdata %>% 
@@ -34,6 +37,7 @@ regdata %>%
   ggplot2::geom_line(data = ltm, aes(x = Date, y = ltm), color = "black") +
   geom_line(data = ltm, aes(x = Date, y = hline), color = "black", linetype = "dashed" )+
   ggplot2::geom_line(data = y2021, aes(x = Date, y = Mean), color = "red" ) +
+  ggplot2::geom_line(data = m30, aes(x = Date, y = Mean30), color = "green" )+
   facet_wrap(.~Location)
   
   
