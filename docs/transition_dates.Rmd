@@ -22,7 +22,9 @@ regdata<- read.csv(file.path(here::here("data-raw/TS_SHP_adv rep MAB GOM GBK NES
 ltm <- regdata %>% 
   dplyr::filter(Y %in% 1982:2012) %>% 
   dplyr::group_by(Date, Location) %>% 
-  dplyr::summarise(ltm = mean(Mean))
+  dplyr::summarise(ltm = mean(Mean)) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::mutate(hline = mean(ltm))
 
 y2021<- regdata %>% 
   dplyr::filter(Y == 2021)
@@ -30,6 +32,7 @@ regdata %>%
   ggplot2::ggplot(aes(x = Date, y = Mean, color = Y))+
   ggplot2::geom_line()+
   ggplot2::geom_line(data = ltm, aes(x = Date, y = ltm), color = "black") +
+  geom_line(data = ltm, aes(x = Date, y = hline), color = "black", linetype = "dashed" )+
   ggplot2::geom_line(data = y2021, aes(x = Date, y = Mean), color = "red" ) +
   facet_wrap(.~Location)
   
