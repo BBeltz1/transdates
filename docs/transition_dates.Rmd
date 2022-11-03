@@ -24,7 +24,9 @@ ltm <- regdata %>%
   dplyr::group_by(Date, Location) %>% 
   dplyr::summarise(ltm = mean(Mean)) %>% 
   dplyr::ungroup() %>% 
-  dplyr::mutate(hline = mean(ltm))
+  dplyr::group_by(Location) %>% 
+  dplyr::mutate(hline = mean(ltm)) %>% 
+  dplyr::ungroup()
 
 m30 <- regdata %>% 
   dplyr::filter(Y == 2021) %>% 
