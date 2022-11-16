@@ -13,51 +13,25 @@ dat<- read.csv(here::here("EPU_transition_dates.csv")) %>%
 dat<- dat %>% pivot_longer(cols = sprtrans:sumlen30, names_to = "Var", values_to = "Value")
 ```
 
-#### ltm compare
 
-```{r, fig.cap="red line = 2021, green line = 2021*0.7, black line = ltm and dashed in mean of ltm, blue mass is all years"}
-regdata<- read.csv(file.path(here::here("data-raw/TS_SHP_adv rep MAB GOM GBK NES SCSPoly.csv"))) %>%
-  dplyr::filter(Location %in% c("GBK", "GOM", "MAB"))
-
-ltm <- regdata %>% 
-  dplyr::filter(Y %in% 1982:2012) %>% 
-  dplyr::group_by(Date, Location) %>% 
-  dplyr::summarise(ltm = mean(Mean)) %>% 
-  dplyr::ungroup() %>% 
-  dplyr::group_by(Location) %>% 
-  dplyr::mutate(hline = mean(ltm)) %>% 
-  dplyr::ungroup()
-
-m30 <- regdata %>% 
-  dplyr::filter(Y == 2021) %>% 
-  dplyr::mutate(Mean30 = Mean*0.7)
-y2021<- regdata %>% 
-  dplyr::filter(Y == 2021)
-regdata %>% 
-  ggplot2::ggplot(aes(x = Date, y = Mean, color = Y))+
-  ggplot2::geom_line()+
-  ggplot2::geom_line(data = ltm, aes(x = Date, y = ltm), color = "black") +
-  geom_line(data = ltm, aes(x = Date, y = hline), color = "black", linetype = "dashed" )+
-  ggplot2::geom_line(data = y2021, aes(x = Date, y = Mean), color = "red" ) +
-  ggplot2::geom_line(data = m30, aes(x = Date, y = Mean30), color = "green" )+
-  facet_wrap(.~Location)
-  
-  
-```
-
-## Spring and Fall transition dates - mean to 30%
+## Spring and Fall transition dates
 
 ```{r}
-dat %>% filter(Var %in% c("sprtrans", "falltrans",
-                          "sprtrans10", "falltrans10",
-                          "sprtrans20", "falltrans20",
-                          "sprtrans30", "falltrans30", "maxday")) %>% 
-  ggplot2::ggplot()+
-  geom_line(aes(x = Time, y = Value, color = Var))+
-  facet_wrap(~EPU)
+dat2<-dat %>% filter(Var %in% c("sprtrans", "falltrans", "maxday"), 
+               !Value == "NA") %>% 
+  dplyr::mutate(Time = as.numeric(Time), 
+                Value = as.numeric(Value)) 
+dat2 %>%  
+  ggplot2::ggplot(aes(x = Time, y = Value, color = Var))+
+  geom_line()+
+  geom_point()+
+  #ecodata::geom_gls()+
+  facet_wrap(.~EPU)#+
+  #ecodata::geom_gls(aes(x = Time, y = Value, color = Var))
+  
 ```
 
-## Length of Summer mean to 30%
+## Length of Summer mean
 
 ```{r}
 gls<- dat %>% filter(Var == "sumlen", 
@@ -65,13 +39,13 @@ gls<- dat %>% filter(Var == "sumlen",
   mutate(Time = as.numeric(Time), 
          Value = as.numeric(Value))
 
-dat %>% filter(Var %in% c("sumlen", "sumlen10", 
-                          "sumlen20", "sumlen30")) %>%
+gls %>% filter(Var %in% c("sumlen")) %>%
   mutate(Time = as.numeric(Time), 
          Value = as.numeric(Value)) %>% 
-  ggplot2::ggplot(aes(x = Time, y = Value, color = Var))+
+  ggplot2::ggplot(aes(x = Time, y = Value))+
   geom_line()+
-  facet_wrap(~EPU)
+  facet_wrap(~EPU)#+
+  #ecodata::geom_gls()
 
 
 ```
