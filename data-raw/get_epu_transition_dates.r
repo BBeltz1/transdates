@@ -13,7 +13,8 @@ library(raster)
 # TS_SHP_DFO_GBKPoly.csv
 # TS_SHP_adv rep MAB GOM GBK NES SCSPoly.csv
 #regdata=read.csv(file.choose(),header=T)
-regdata<- read.csv(file.path(here::here("data-raw/TS_SHP_adv rep MAB GOM GBK NES SCSPoly.csv"))) %>%
+#regdata<- read.csv(file.path(here::here("data-raw/TS_SHP_adv rep MAB GOM GBK NES SCSPoly.csv"))) %>%
+regdata<- read.csv(file.path(here::here("data-raw/2022_final_TS_EPU.csv"))) %>%
   dplyr::filter(Location %in% c("GBK", "GOM", "MAB"))
 
 # set lastyear
