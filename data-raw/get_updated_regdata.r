@@ -3,7 +3,7 @@ library(tidyverse)
 library(sf)
 # Read in netcfs
 raw.dir <- here::here("data-raw", "gridded")
-seasonal_oisst_anom_nc <-"sst.day.mean.2022.v2.nc"
+seasonal_oisst_anom_nc <-"sst.day.mean.2023.nc"
 
 dat <- raster::stack(file.path(raw.dir,seasonal_oisst_anom_nc))
 # Get Daily Mean and SD
@@ -79,6 +79,6 @@ raw <- rbind(gb, gom, mab) %>%
 regdata<- read.csv(file.path(here::here("data-raw/TS_SHP_adv rep MAB GOM GBK NES SCSPoly.csv")))
 regdata<- regdata %>% rbind(raw)
 
-write.csv(regdata, file = here::here("data-raw/2022_final_TS_EPU.CSV" ))
+write.csv(regdata, file = here::here("data-raw/2023_final_TS_EPU.CSV" ))
 
 
