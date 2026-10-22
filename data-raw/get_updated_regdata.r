@@ -3,7 +3,7 @@ library(tidyverse)
 library(sf)
 # Read in netcfs
 raw.dir <- here::here("data-raw", "gridded")
-seasonal_oisst_anom_nc <-"sst.day.mean.2023.nc"
+seasonal_oisst_anom_nc <-"sst.day.mean.2026.nc"
 
 dat <- raster::stack(file.path(raw.dir,seasonal_oisst_anom_nc))
 # Get Daily Mean and SD
@@ -13,7 +13,7 @@ dat <- raster::crop(dat, extent(280,300,30,50))
 dat <- raster::rotate(dat)
 
 ## Dat too big - cut in half because Raster
-dat2<- dat[[181:360]]
+dat2<- dat[[201:293]]
 
 ## Loop for calculating mean and SD
 ### Mask to EPU
@@ -74,11 +74,10 @@ raw <- rbind(gb, gom, mab) %>%
   dplyr::rename(Mean = MEAN,
                 SE = SD,
                 Location = EPU) %>%
-  dplyr::select(!DATE) %>%
-  dplyr::filter(!M == 6)
-regdata<- read.csv(file.path(here::here("data-raw/TS_SHP_adv rep MAB GOM GBK NES SCSPoly.csv")))
+  dplyr::select(!DATE)
+regdata<- read.csv(file.path(here::here("data-raw/2026_200_TS_EPU.CSV")))
 regdata<- regdata %>% rbind(raw)
 
-write.csv(regdata, file = here::here("data-raw/2023_final_TS_EPU.CSV" ))
+write.csv(regdata, file = here::here("data-raw/2026_293_TS_EPU.CSV" ))
 
 
